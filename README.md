@@ -1,2 +1,1 @@
-din0oWeb.
-(c) 2024.
+din0oWeb
