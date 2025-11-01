@@ -1,0 +1,12 @@
+# IDE files
+.idea/
+.vscode/
+
+# OS files
+desktop.ini
+.DS_Store
+
+# Project specific
+!/chat_backend/
+apk_calculator/systembolaget-scraper/systembolaget_data.json
+apk_calculator/systembolaget-scraper/processed_systembolaget_data.json

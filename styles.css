@@ -1,0 +1,176 @@
+/* Hide footer on screen less than 768 pixels (mobile) */
+@media (max-width: 768px) {
+    footer {
+        display: none;
+    }
+}
+
+
+
+/* Governs section style */
+body, html {
+    font-family: "Gill Sans Nova", sans-serif;
+    font-weight: lighter;
+    font-size: 110%;
+    background-color: #fff8dc;
+    color: #555555;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    align-items: center;
+    /* hiding scroll bar to avoid flexing */
+    scrollbar-width: none;
+}
+
+/* styles in content section */
+main {
+    padding: 20px;
+}
+
+
+p {
+    font-family: "Calibri", sans-serif;
+    font-weight: lighter;
+    vertical-align: top;
+}
+
+.chat-messages {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+/* links */
+a {
+    color: #000000;
+    text-decoration: none; /* No underline */
+    font-weight: bold;
+    transition: color 0.1s ease;
+}
+a:hover {
+    color: #444444;
+}
+
+
+header {
+    background-color: #ffeb3b;
+    padding: 15px;
+    text-align: center;
+}
+/* din0oweb logo */
+header h1 {
+    margin: 0;
+    color: #000000;
+    font-family: "Gill Sans Nova", ui-monospace;
+}
+
+#headerlogo {
+    scale: 0.8;
+}
+/* links */
+h1 a {
+    text-decoration: none;
+    color: inherit;
+}
+h1 a:hover {
+    font-weight: bolder;
+    color: #444444;
+}
+
+
+/* section text */
+h2 {
+    font-weight: lighter;
+    color: #000000;
+}
+h3 {
+    color: #000000;
+    font-weight: lighter;
+    font-style: italic;
+    font-family: "Calibri";
+    padding-left: 1%;
+}
+section {
+    padding-left: 15%;
+}
+
+/* navbar */
+nav.navbar {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: center;
+}
+nav.navbar a {
+    padding: 0 8px;
+    font-size: 140%;
+}
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+nav ul li a {
+    text-decoration: none;
+    color: #000000;
+}
+nav ul li a:hover {
+    text-decoration: none;
+    color: #444444;
+}
+
+
+
+.chat-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* chat message input */
+.chat-form textarea {
+    width: 30vw;
+    height: 10vh;
+    resize: none;  /* Prevent resizing */
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 5px solid #ddd;
+}
+
+.chat-form input[type="text"] {
+    resize: none;  /* This isn't necessary for input[type="text"], but won't hurt */
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+
+/* button */
+.chat-form button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #000000;
+    color: white;
+    cursor: pointer;
+}
+
+
+/* footer */
+footer {
+    background-color: #fff8dc;
+    font-family: "Gill Sans Nova", ui-monospace;
+    font-weight: bolder;
+    text-align: center;
+    padding: 12px;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}

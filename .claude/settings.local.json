@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ren \"C:\\din0o0o\\din0oweb\\.idea\\lp2315.github.io.iml\" \"din0o0o.github.io.iml\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
