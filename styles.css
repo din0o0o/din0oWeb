@@ -1,7 +1,17 @@
-/* Hide footer on screen less than 768 pixels (mobile) */
+/* Mobile adjustments for screens less than 768 pixels */
 @media (max-width: 768px) {
     footer {
         display: none;
+    }
+
+    #headerlogo {
+        max-width: 90%;
+        height: auto;
+        scale: 0.7;
+    }
+
+    header {
+        padding: 10px 5px;
     }
 }
 
@@ -84,6 +94,8 @@ header h1 {
 }
 
 #headerlogo {
+    max-width: 100%;
+    height: auto;
     scale: 0.8;
 }
 /* links */
@@ -189,4 +201,13 @@ footer {
     position: relative;
     width: 100%;
     bottom: 0;
+}
+
+footer a {
+    color: #000000;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #444444;
 }
