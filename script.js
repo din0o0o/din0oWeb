@@ -1,16 +1,26 @@
+// Ensure the main section is updated when navigating
+function showSection(section) {
+    // Reset chat initialization flag when leaving chat
+    if (section !== 'chat') {
+        chatInitialized = false;
+    }
+
+    fetch(`${section}.html`)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('main-content').innerHTML = data;
+            setTimeout(() => {
+                if (section === 'chat') {
+                    initializeChat();
+                }
+            }, 100);
+        })
+        .catch(error => console.error('Error loading section:', error));
+}
+
 // Html hashing
 document.addEventListener('DOMContentLoaded', function() {
     const links = document.querySelectorAll('nav ul li a');
-    document.querySelectorAll('main section');
-// Function to show the desired section (home/links/etc)
-    function showSection(section) {
-        fetch(`${section}.html`)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('main-content').innerHTML = data;
-            })
-            .catch(error => console.error('Error loading section:', error));
-    }
 
     // Check the current hash # and set the section
     const currentHash = window.location.hash.substring(1);
@@ -39,20 +49,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // Firebase chat functionality
+let chatInitialized = false;
 function initializeChat() {
     const form = document.getElementById('chat-form');
     const messagesList = document.getElementById('chat-messages');
 
     if (!form || !window.firebaseDB) {
+        console.log('Chat form not found or Firebase not ready');
         return;
     }
 
+    if (chatInitialized) {
+        console.log('Chat already initialized');
+        return;
+    }
+    chatInitialized = true;
+
+    console.log('Initializing Firebase chat...');
     const { collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } = window.firebaseModules;
     const messagesRef = collection(window.firebaseDB, 'messages');
 
     // Listen for new messages in real-time
     const q = query(messagesRef, orderBy('timestamp', 'desc'), limit(50));
     onSnapshot(q, (snapshot) => {
+        console.log('Received', snapshot.size, 'messages from Firebase');
         messagesList.innerHTML = '';
         const messages = [];
         snapshot.forEach((doc) => {
@@ -80,10 +100,12 @@ function initializeChat() {
 
         if (messageText) {
             try {
+                console.log('Posting message:', messageText);
                 await addDoc(messagesRef, {
                     text: messageText,
                     timestamp: serverTimestamp()
                 });
+                console.log('Message posted successfully');
                 messageInput.value = '';
             } catch (error) {
                 console.error('Error posting message:', error);
@@ -91,17 +113,4 @@ function initializeChat() {
             }
         }
     });
-}
-
-// Ensure the main section is updated when navigating
-function showSection(section) {
-    fetch(`${section}.html`)
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('main-content').innerHTML = data;
-            setTimeout(() => {
-                initializeChat();
-            }, 100);
-        })
-        .catch(error => console.error('Error loading section:', error));
 }
