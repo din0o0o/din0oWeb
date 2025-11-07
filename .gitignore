@@ -1,6 +1,7 @@
 # IDE files
 .idea/
 .vscode/
+.claude/
 
 # OS files
 desktop.ini
@@ -10,3 +11,10 @@ desktop.ini
 !/chat_backend/
 apk_calculator/systembolaget-scraper/systembolaget_data.json
 apk_calculator/systembolaget-scraper/processed_systembolaget_data.json
+
+# Build scripts
+*.bat
+
+# Resources and documentation
+resources/
+CLAUDE.md

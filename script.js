@@ -55,24 +55,20 @@ function initializeChat() {
     const messagesList = document.getElementById('chat-messages');
 
     if (!form || !window.firebaseDB) {
-        console.log('Chat form not found or Firebase not ready');
         return;
     }
 
     if (chatInitialized) {
-        console.log('Chat already initialized');
         return;
     }
     chatInitialized = true;
 
-    console.log('Initializing Firebase chat...');
     const { collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } = window.firebaseModules;
     const messagesRef = collection(window.firebaseDB, 'messages');
 
     // Listen for new messages in real-time
     const q = query(messagesRef, orderBy('timestamp', 'desc'), limit(50));
     onSnapshot(q, (snapshot) => {
-        console.log('Received', snapshot.size, 'messages from Firebase');
         messagesList.innerHTML = '';
         const messages = [];
         snapshot.forEach((doc) => {
@@ -88,7 +84,6 @@ function initializeChat() {
             messagesList.appendChild(messageElement);
         });
 
-        // Scroll to bottom
         messagesList.scrollTop = messagesList.scrollHeight;
     });
 
@@ -100,12 +95,10 @@ function initializeChat() {
 
         if (messageText) {
             try {
-                console.log('Posting message:', messageText);
                 await addDoc(messagesRef, {
                     text: messageText,
                     timestamp: serverTimestamp()
                 });
-                console.log('Message posted successfully');
                 messageInput.value = '';
             } catch (error) {
                 console.error('Error posting message:', error);
