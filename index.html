@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>din0oWeb</title>
+    <title>din0o0oWeb</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="dino_icon_128.ico" type="image/x-icon">
+    <link rel="icon" href="icon.png" type="image/x-icon">
 </head>
 <!-- onload defines default front page -->
 <body>
     <header>
         <!-- page headline links to main page -->
         <h1><a href="#home" onclick="showSection('home')">
-            <img id="headerlogo" src="/dinowebheader.png"></a></h1>
+            <img id="headerlogo" src="/header.png"></a></h1>
         <nav class="navbar">
             <ul>
                 <li><a href="#apps" onclick="showSection('apps')">Apps</a></li>
@@ -28,8 +28,30 @@
         </section>
     </main>
     <footer>
-        <br>&copy; din0o. 2025
+        <br>&copy; din0o0o. 2024-25
     </footer>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDFLjx0FvGbM29w0N3KE5O4sMJ87utowSQ",
+            authDomain: "din0o0oweb.firebaseapp.com",
+            projectId: "din0o0oweb",
+            storageBucket: "din0o0oweb.firebasestorage.app",
+            messagingSenderId: "549242649489",
+            appId: "1:549242649489:web:e227ac197ed5a46041b830"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make Firebase available globally
+        window.firebaseDB = db;
+        window.firebaseModules = { collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp };
+    </script>
     <script src="script.js"></script>
 </body>
 </html>

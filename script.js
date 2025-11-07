@@ -38,71 +38,59 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-const serverUrl = 'https://4dfb-82-183-30-112.ngrok-free.app';
-
-// Fetch messages on load
-fetchMessages();
-
-document.addEventListener('DOMContentLoaded', function() {
-    initializeChat(); // Initialize chat on DOM content loaded
-});
-
+// Firebase chat functionality
 function initializeChat() {
     const form = document.getElementById('chat-form');
-    const messagesDiv = document.getElementById('chat-messages');
+    const messagesList = document.getElementById('chat-messages');
 
-    if (!form) {
+    if (!form || !window.firebaseDB) {
         return;
     }
 
-    form.addEventListener('submit', function(event) {
+    const { collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } = window.firebaseModules;
+    const messagesRef = collection(window.firebaseDB, 'messages');
+
+    // Listen for new messages in real-time
+    const q = query(messagesRef, orderBy('timestamp', 'desc'), limit(50));
+    onSnapshot(q, (snapshot) => {
+        messagesList.innerHTML = '';
+        const messages = [];
+        snapshot.forEach((doc) => {
+            messages.push(doc.data());
+        });
+
+        // Reverse to show oldest first
+        messages.reverse().forEach((msg) => {
+            const messageElement = document.createElement('li');
+            const date = msg.timestamp ? msg.timestamp.toDate() : new Date();
+            const time = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            messageElement.innerHTML = `<strong>${time} ></strong> ${msg.text}`;
+            messagesList.appendChild(messageElement);
+        });
+
+        // Scroll to bottom
+        messagesList.scrollTop = messagesList.scrollHeight;
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', async function(event) {
         event.preventDefault();
         const messageInput = document.getElementById('message');
         const messageText = messageInput.value.trim();
 
         if (messageText) {
-            const now = new Date();
-            const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-            const timestamp = `${time} >`;
-            const messageElement = document.createElement('li');
-            messageElement.innerHTML = `<strong>${timestamp}</strong> ${messageText}`;
-            messagesDiv.append(messageElement);
-
-            // Save message to local server
-            fetch(serverUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message: messageText }),
-            }).then(response => {
-                if (!response.ok) {
-                    console.error('Failed to post message');
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-            });
-
-            messageInput.value = '';
+            try {
+                await addDoc(messagesRef, {
+                    text: messageText,
+                    timestamp: serverTimestamp()
+                });
+                messageInput.value = '';
+            } catch (error) {
+                console.error('Error posting message:', error);
+                alert('Failed to post message. Please try again.');
+            }
         }
     });
-}
-
-function fetchMessages() {
-    fetch(serverUrl)
-        .then(response => response.json())
-        .then(messages => {
-            const messagesDiv = document.getElementById('chat-messages');
-            messagesDiv.innerHTML = '';
-            messages.reverse().forEach(message => {
-                const messageElement = document.createElement('li');
-                messageElement.innerHTML = `<strong>${message.timestamp} ></strong> ${message.text}`;
-                messagesDiv.appendChild(messageElement);
-            });
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            initializeChat();
-        })
-        .catch(error => console.error('Error:', error));
 }
 
 // Ensure the main section is updated when navigating
@@ -117,6 +105,3 @@ function showSection(section) {
         })
         .catch(error => console.error('Error loading section:', error));
 }
-
-// Call fetchMessages when the page loads
-window.onload = fetchMessages;
