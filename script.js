@@ -1,36 +1,25 @@
-// Ensure the main section is updated when navigating
+// Section navigation
 function showSection(section) {
-    // Reset chat initialization flag when leaving chat
-    if (section !== 'chat') {
-        chatInitialized = false;
-    }
-
     fetch(`${section}.html`)
         .then(response => response.text())
         .then(data => {
             document.getElementById('main-content').innerHTML = data;
-            setTimeout(() => {
-                if (section === 'chat') {
-                    initializeChat();
-                }
-            }, 100);
+            if (section === 'chat') {
+                initializeChat();
+            } else if (section === 'files') {
+                initializeFiles();
+            }
         })
         .catch(error => console.error('Error loading section:', error));
 }
 
-// Html hashing
+// Hash-based navigation
 document.addEventListener('DOMContentLoaded', function() {
     const links = document.querySelectorAll('nav ul li a');
 
-    // Check the current hash # and set the section
     const currentHash = window.location.hash.substring(1);
-    if (currentHash) {
-        showSection(currentHash);
-    } else {
-        showSection('home'); // Default start section
-    }
+    showSection(currentHash || 'home');
 
-    // Navigation click handling
     links.forEach(link => {
         link.addEventListener('click', function(event) {
             event.preventDefault();
@@ -40,52 +29,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Hash change handling
     window.addEventListener('hashchange', function() {
         const targetId = window.location.hash.substring(1);
         showSection(targetId);
     });
 });
 
-
-// Firebase chat functionality
+// Chat functionality (local API)
 let chatInitialized = false;
+let chatPollInterval = null;
+
 function initializeChat() {
     const form = document.getElementById('chat-form');
     const messagesList = document.getElementById('chat-messages');
 
-    if (!form || !window.firebaseDB) {
-        return;
-    }
-
-    if (chatInitialized) {
-        return;
-    }
+    if (!form || !messagesList) return;
+    if (chatInitialized) return;
     chatInitialized = true;
 
-    const { collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } = window.firebaseModules;
-    const messagesRef = collection(window.firebaseDB, 'messages');
+    // Load messages
+    loadMessages();
 
-    // Listen for new messages in real-time
-    const q = query(messagesRef, orderBy('timestamp', 'desc'), limit(50));
-    onSnapshot(q, (snapshot) => {
-        messagesList.innerHTML = '';
-        const messages = [];
-        snapshot.forEach((doc) => {
-            messages.push(doc.data());
-        });
-
-        // Reverse to show oldest first
-        messages.reverse().forEach((msg) => {
-            const messageElement = document.createElement('li');
-            const date = msg.timestamp ? msg.timestamp.toDate() : new Date();
-            const time = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-            messageElement.innerHTML = `<strong>${time} ></strong> ${msg.text}`;
-            messagesList.appendChild(messageElement);
-        });
-
-        messagesList.scrollTop = messagesList.scrollHeight;
-    });
+    // Poll for new messages every 3 seconds
+    chatPollInterval = setInterval(loadMessages, 3000);
 
     // Handle form submission
     form.addEventListener('submit', async function(event) {
@@ -95,15 +61,156 @@ function initializeChat() {
 
         if (messageText) {
             try {
-                await addDoc(messagesRef, {
-                    text: messageText,
-                    timestamp: serverTimestamp()
+                const response = await fetch('/api/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: messageText })
                 });
-                messageInput.value = '';
+
+                if (response.ok) {
+                    messageInput.value = '';
+                    loadMessages();
+                }
             } catch (error) {
                 console.error('Error posting message:', error);
-                alert('Failed to post message. Please try again.');
             }
         }
     });
+}
+
+async function loadMessages() {
+    const messagesList = document.getElementById('chat-messages');
+    if (!messagesList) {
+        // Chat section not visible, stop polling
+        if (chatPollInterval) {
+            clearInterval(chatPollInterval);
+            chatPollInterval = null;
+            chatInitialized = false;
+        }
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/messages');
+        const messages = await response.json();
+
+        messagesList.innerHTML = '';
+        messages.forEach(msg => {
+            const li = document.createElement('li');
+            const time = formatTime(msg.timestamp);
+            li.innerHTML = `<strong>${time} ></strong> ${escapeHtml(msg.text)}`;
+            messagesList.appendChild(li);
+        });
+
+        messagesList.scrollTop = messagesList.scrollHeight;
+    } catch (error) {
+        console.error('Error loading messages:', error);
+    }
+}
+
+function formatTime(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Files functionality (local API)
+let filesInitialized = false;
+
+function initializeFiles() {
+    const fileInput = document.getElementById('file-input');
+    if (!fileInput || filesInitialized) return;
+    filesInitialized = true;
+
+    loadFiles();
+
+    fileInput.addEventListener('change', async (e) => {
+        const status = document.getElementById('upload-status');
+        for (const file of e.target.files) {
+            status.textContent = `Uploading ${file.name}...`;
+            await uploadFile(file);
+        }
+        status.textContent = '';
+        fileInput.value = '';
+        loadFiles();
+    });
+}
+
+async function loadFiles() {
+    const fileList = document.getElementById('file-list');
+    if (!fileList) {
+        filesInitialized = false;
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/files');
+        const files = await response.json();
+
+        fileList.innerHTML = '';
+        if (files.length === 0) {
+            fileList.innerHTML = '<li class="no-files">No files uploaded</li>';
+            return;
+        }
+
+        files.forEach(file => {
+            const li = document.createElement('li');
+            const size = formatFileSize(file.size);
+            li.innerHTML = `
+                <span class="file-name">${escapeHtml(file.original_name)}</span>
+                <span class="file-size">${size}</span>
+                <button onclick="downloadFile('${file.filename}')">Download</button>
+                <button onclick="deleteFile('${file.filename}')">Delete</button>
+            `;
+            fileList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Error loading files:', error);
+    }
+}
+
+async function uploadFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const response = await fetch('/api/files', {
+            method: 'POST',
+            body: formData
+        });
+        return response.ok;
+    } catch (error) {
+        console.error('Upload error:', error);
+        return false;
+    }
+}
+
+function downloadFile(filename) {
+    window.location.href = `/api/files/${encodeURIComponent(filename)}`;
+}
+
+async function deleteFile(filename) {
+    if (!confirm('Delete this file?')) return;
+
+    try {
+        const response = await fetch(`/api/files/${encodeURIComponent(filename)}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            loadFiles();
+        }
+    } catch (error) {
+        console.error('Delete error:', error);
+    }
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1024 / 1024).toFixed(1) + ' MB';
 }

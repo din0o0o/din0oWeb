@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>din0o0oWeb</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="icon.png" type="image/x-icon">
+    <link rel="icon" href="resources/icon.png" type="image/x-icon">
 </head>
-<!-- onload defines default front page -->
 <body>
     <header>
-        <!-- page headline links to main page -->
         <h1><a href="#home" onclick="showSection('home')">
-            <img id="headerlogo" src="/header.png"></a></h1>
+            <img id="headerlogo" src="/resources/header.png"></a></h1>
         <nav class="navbar">
             <ul>
                 <li><a href="#stuff" onclick="showSection('stuff')">Stuff</a></li>
                 <li>|</li>
                 <li><a href="#links" onclick="showSection('links')">Links</a></li>
+                <li>|</li>
+                <li><a href="#files" onclick="showSection('files')">Files</a></li>
                 <li>|</li>
                 <li><a href="#chat" onclick="showSection('chat')">Chat</a></li>
             </ul>
@@ -31,27 +31,6 @@
         <br>&copy; <a href="https://github.com/din0o0o" target="_blank">din0o0o</a>. 2024-26
     </footer>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDFLjx0FvGbM29w0N3KE5O4sMJ87utowSQ",
-            authDomain: "din0o0oweb.firebaseapp.com",
-            projectId: "din0o0oweb",
-            storageBucket: "din0o0oweb.firebasestorage.app",
-            messagingSenderId: "549242649489",
-            appId: "null"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Make Firebase available globally
-        window.firebaseDB = db;
-        window.firebaseModules = { collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp };
-    </script>
     <script src="script.js"></script>
 </body>
 </html>

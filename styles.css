@@ -28,7 +28,7 @@
 
 /* Governs section style */
 body, html {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "UD Digi Kyokasho NP-R", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-weight: 300;
     font-size: 110%;
     background-color: #fff8dc;
@@ -216,4 +216,75 @@ footer a {
 
 footer a:hover {
     color: #444444;
+}
+
+/* Files section */
+.files-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.files-upload {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.files-upload button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #000000;
+    color: white;
+    cursor: pointer;
+}
+
+.files-upload button:hover {
+    background-color: #333333;
+}
+
+#upload-status {
+    margin-left: 10px;
+    font-style: italic;
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+}
+
+.file-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+}
+
+.file-list .file-name {
+    flex: 1;
+    word-break: break-all;
+}
+
+.file-list .file-size {
+    color: #888;
+    font-size: 0.9em;
+}
+
+.file-list button {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.file-list button:hover {
+    background-color: #f0f0f0;
+}
+
+.no-files {
+    text-align: center;
+    color: #888;
+    font-style: italic;
 }
