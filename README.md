@@ -1,19 +1,21 @@
-> # $\color{#ffeb3b}\{\textbf{din0oWeb}}$ 
-Web frontend.</br></br>
+> # $\color{#ffeb3b}\{\textbf{din0oWeb}}$
+Web frontend for [din0oweb.asuscomm.com](https://din0oweb.asuscomm.com).</br></br>
 
 ## $\color{#adf137}\textbf{File Structure}$ </br>
 
 ```
-din0oweb/
-├── index.html          # Main page with header/nav
-├── home.html           # Home section content
-├── apps.html           # Applications section (e.g., spritjakt.com)
+din0oWeb/
+├── index.html          # Shell: header, nav, footer
+├── home.html           # Home section
+├── stuff.html          # Projects & downloads
 ├── links.html          # Curated links (Software, Games, Web, AI, Science)
+├── files.html          # File upload/download
 ├── chat.html           # Guestbook
-├── script.js           # Navigation & Firebase chat functionality
-├── styles.css          # Global styles
-└── README.md           # GitHub README
+├── script.js           # All frontend JS (navigation, chat, files)
+├── styles.css          # All styles (CSS variables, dark mode, fonts)
+├── header.png          # Header logo
+├── icon.png            # Favicon
+└── README.md           # This file
 ```
 
-</ol> </br></br></br>
-
+</br></br></br>

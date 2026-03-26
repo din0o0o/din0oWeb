@@ -1,8 +1,8 @@
 <div class="files-container">
     <div class="files-upload">
         <input type="file" id="file-input" multiple hidden>
-        <button onclick="document.getElementById('file-input').click()">Upload Files</button>
-        <span id="upload-status"></span>
+        <button class="action-btn" onclick="document.getElementById('file-input').click()">⤴️</button>
     </div>
+    <div id="upload-progress" class="upload-progress" style="display:none"></div>
     <ul id="file-list" class="file-list"></ul>
 </div>

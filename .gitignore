@@ -7,14 +7,10 @@
 desktop.ini
 .DS_Store
 
-# Project specific
-!/chat_backend/
-apk_calculator/systembolaget-scraper/systembolaget_data.json
-apk_calculator/systembolaget-scraper/processed_systembolaget_data.json
-
 # Build scripts
 *.bat
 
-# Resources and documentation
+# Resources (local dev assets) and documentation
 resources/
 CLAUDE.md
+new_stuff.txt

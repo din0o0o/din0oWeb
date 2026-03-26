@@ -1,7 +1,11 @@
 <div class="chat-container">
     <ul id="chat-messages" class="chat-messages"></ul>
     <form id="chat-form" class="chat-form">
-        <textarea id="message" placeholder="Write a message..." maxlength="150"></textarea>
-        <button type="submit">Post Message</button>
+        <input type="text" id="chat-name" placeholder="Name (optional)" maxlength="30">
+        <div class="textarea-wrapper">
+            <textarea id="message" placeholder="Write a message..." maxlength="150"></textarea>
+            <button type="submit" class="action-btn">🆗</button>
+        </div>
     </form>
+    <div id="chat-status" class="chat-status"></div>
 </div>

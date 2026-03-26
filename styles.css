@@ -1,4 +1,424 @@
-/* Mobile adjustments for screens less than 768 pixels */
+/* ─── CSS Variables ─────────────────────────────────────────────── */
+:root {
+    --accent:        #000000;
+    --bg:            #fff8dc;
+    --header-bg:     #ffeb3b;
+    --header-border: #000000;
+    --text:          #555555;
+    --text-dark:     #000000;
+    --link:          #000000;
+    --link-hover:    #444444;
+    --item-bg:       #f9f9f9;
+    --item-border:   #dddddd;
+    --input-border:  #dddddd;
+    --muted:         #888888;
+    --sep:           #e0e0e0;
+}
+
+[data-theme="dark"] {
+    --accent:        #a6f33a;
+    --bg:            #000000;
+    --header-bg:     #000000;
+    --header-border: #ffeb3b;
+    --text:          #aaaaaa;
+    --text-dark:     #e0e0d0;
+    --link:          #ddddcc;
+    --link-hover:    #a6f33a;
+    --item-bg:       #1e1e1e;
+    --item-border:   #333333;
+    --input-border:  #333333;
+    --muted:         #666666;
+    --sep:           #333333;
+}
+
+
+/* ─── Base ──────────────────────────────────────────────────────── */
+body, html {
+    font-family: "Noto Sans", Tahoma, sans-serif;
+    font-weight: 300;
+    font-size: 110%;
+    background-color: var(--bg);
+    color: var(--text);
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    scrollbar-width: none;
+}
+
+p {
+    font-weight: 300;
+    vertical-align: top;
+}
+
+a {
+    font-family: "Noto Sans", Tahoma, sans-serif;
+    color: var(--link);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.1s ease;
+}
+
+a:hover {
+    color: var(--link-hover);
+}
+
+span {
+    font-family: "Noto Sans", Tahoma, sans-serif;
+    font-stretch: condensed;
+}
+
+
+/* ─── Header ────────────────────────────────────────────────────── */
+header {
+    background-color: var(--header-bg);
+    padding: 15px;
+    text-align: center;
+    border-bottom: 4px double var(--header-border);
+    position: relative;
+}
+
+header h1 {
+    margin: 0;
+}
+
+#headerlogo {
+    max-width: 100%;
+    height: auto;
+    scale: 0.8;
+}
+
+h1 a {
+    text-decoration: none;
+}
+
+
+/* ─── Dark mode toggle ──────────────────────────────────────────── */
+#darkmode-toggle {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 1.3em;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    user-select: none;
+    transition: border-color 0.15s;
+}
+
+#darkmode-toggle:hover {
+    border-color: var(--accent);
+}
+
+
+/* ─── Nav sliding dot ───────────────────────────────────────────── */
+#nav-dot {
+    position: absolute;
+    bottom: 5px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: left 0.25s ease, opacity 0.2s;
+    pointer-events: none;
+    opacity: 0;
+}
+
+
+/* ─── Navbar ────────────────────────────────────────────────────── */
+nav.navbar {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+nav.navbar a {
+    font-family: "Noto Sans Mono", "Courier New", monospace;
+    padding: 0 8px;
+    font-size: 120%;
+    color: var(--link);
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+nav ul li a:hover {
+    color: var(--link-hover);
+}
+
+.nav-sep {
+    color: var(--text);
+}
+
+
+/* ─── Main & Sections ───────────────────────────────────────────── */
+main {
+    padding: 20px;
+}
+
+section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+
+/* ─── Headings ──────────────────────────────────────────────────── */
+h2 {
+    font-family: "Noto Sans", Tahoma, sans-serif;
+    font-weight: 300;
+    color: var(--text-dark);
+}
+
+h3 {
+    font-family: "Noto Sans Mono", "Courier New", monospace;
+    color: var(--text-dark);
+    font-weight: 300;
+    font-style: italic;
+}
+
+
+/* ─── Footer ────────────────────────────────────────────────────── */
+footer {
+    font-family: "Noto Sans Mono", "Courier New", monospace;
+    background-color: var(--bg);
+    font-weight: 600;
+    text-align: center;
+    padding: 12px;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}
+
+footer a {
+    color: var(--link);
+}
+
+
+/* ─── Action buttons (icon buttons with accent border on hover) ─── */
+button.action-btn {
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: border-color 0.15s;
+    position: relative;
+}
+
+button.action-btn:hover {
+    border-color: var(--accent);
+}
+
+
+/* ─── Chat ──────────────────────────────────────────────────────── */
+.chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.chat-messages {
+    font-family: "Noto Sans Mono", "Courier New", monospace;
+    width: 60%;
+    max-width: 600px;
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 20px auto;
+    border: 2px solid var(--item-border);
+    padding: 15px;
+    background-color: var(--item-bg);
+    list-style: none;
+}
+
+.chat-messages li {
+    padding: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--sep);
+}
+
+.chat-messages li:last-child {
+    border-bottom: none;
+}
+
+.chat-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.chat-form input[type="text"] {
+    font-family: "Noto Sans Mono", "Courier New", monospace;
+    width: 30vw;
+    padding: 8px 10px;
+    border: 2px solid var(--input-border);
+    background: var(--bg);
+    color: var(--text-dark);
+    font-size: 0.9em;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.chat-form input[type="text"]:focus {
+    border-color: var(--accent);
+}
+
+.textarea-wrapper {
+    position: relative;
+    width: 30vw;
+}
+
+.textarea-wrapper textarea {
+    font-family: "Noto Sans Mono", "Courier New", monospace;
+    width: 100%;
+    height: 10vh;
+    resize: none;
+    padding: 10px;
+    border: 2px solid var(--input-border);
+    background: var(--bg);
+    color: var(--text-dark);
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s;
+    display: block;
+}
+
+.textarea-wrapper textarea:focus {
+    border-color: var(--accent);
+}
+
+.textarea-wrapper .action-btn {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 2.4em;
+    height: 2.4em;
+    font-size: 1.3em;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+}
+
+.chat-status {
+    font-family: "Noto Sans Mono", "Courier New", monospace;
+    text-align: center;
+    font-size: 0.85em;
+    color: var(--muted);
+    min-height: 1.2em;
+    margin-top: 4px;
+}
+
+
+/* ─── Files ─────────────────────────────────────────────────────── */
+.files-container {
+    font-family: "Noto Sans Mono", "Courier New", monospace;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.files-upload {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.files-upload button {
+    width: 2.8em;
+    height: 2.8em;
+    font-size: 1.4em;
+    background: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+}
+
+.upload-progress {
+    max-width: 400px;
+    margin: 8px auto;
+    font-size: 0.85em;
+    color: var(--text);
+}
+
+.upload-progress-bar-bg {
+    height: 4px;
+    background: var(--item-border);
+    margin-top: 4px;
+    border-radius: 2px;
+}
+
+.upload-progress-bar {
+    height: 4px;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.15s;
+    border-radius: 2px;
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+}
+
+.file-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    background-color: var(--item-bg);
+    border: 1px solid var(--item-border);
+}
+
+.file-list .file-name {
+    flex: 1;
+    word-break: break-all;
+    color: var(--text-dark);
+}
+
+.file-list .file-size {
+    color: var(--muted);
+    font-size: 0.9em;
+}
+
+.file-list button {
+    width: 2em;
+    height: 2em;
+    font-size: 1.1em;
+    background: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+}
+
+.no-files {
+    text-align: center;
+    color: var(--muted);
+    font-style: italic;
+}
+
+
+/* ─── Mobile (≤768px) ───────────────────────────────────────────── */
 @media (max-width: 768px) {
     footer {
         display: none;
@@ -22,269 +442,17 @@
     nav.navbar a {
         padding: 0 2px;
     }
-}
 
+    #darkmode-toggle {
+        top: 6px;
+        right: 6px;
+        font-size: 1.1em;
+    }
 
-
-/* Governs section style */
-body, html {
-    font-family: -apple-system, BlinkMacSystemFont, "UD Digi Kyokasho NP-R", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-weight: 300;
-    font-size: 110%;
-    background-color: #fff8dc;
-    color: #555555;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    flex-direction: column;
-    align-items: center;
-    /* hiding scroll bar to avoid flexing */
-    scrollbar-width: none;
-}
-
-/* styles in content section */
-main {
-    padding: 20px;
-}
-
-
-p {
-    font-weight: 300;
-    vertical-align: top;
-}
-
-.chat-messages {
-    width: 60%;
-    max-width: 600px;
-    min-height: 200px;
-    max-height: 400px;
-    overflow-y: auto;
-    margin: 20px auto;
-    border: 2px solid #ddd;
-    padding: 15px;
-    background-color: #f9f9f9;
-    list-style: none;
-}
-
-.chat-messages li {
-    padding: 8px;
-    margin-bottom: 8px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.chat-messages li:last-child {
-    border-bottom: none;
-}
-
-/* links */
-a {
-    color: #000000;
-    text-decoration: none; /* No underline */
-    font-weight: bold;
-    transition: color 0.1s ease;
-}
-a:hover {
-    color: #444444;
-}
-
-
-header {
-    background-color: #ffeb3b;
-    padding: 15px;
-    text-align: center;
-    border-bottom: 4px double #000000;
-}
-/* din0oweb logo */
-header h1 {
-    margin: 0;
-    color: #000000;
-}
-
-#headerlogo {
-    max-width: 100%;
-    height: auto;
-    scale: 0.8;
-}
-/* links */
-h1 a {
-    text-decoration: none;
-    color: inherit;
-}
-h1 a:hover {
-    font-weight: bolder;
-    color: #444444;
-}
-
-
-/* section text */
-h2 {
-    font-weight: 300;
-    color: #000000;
-}
-h3 {
-    color: #000000;
-    font-weight: 300;
-    font-style: italic;
-}
-section {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* navbar */
-nav.navbar {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-around;
-    align-items: center;
-}
-nav.navbar a {
-    padding: 0 8px;
-    font-size: 140%;
-}
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-nav ul li {
-    display: inline;
-    margin: 0 10px;
-}
-nav ul li a {
-    text-decoration: none;
-    color: #000000;
-}
-nav ul li a:hover {
-    text-decoration: none;
-    color: #444444;
-}
-
-
-
-.chat-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-
-/* chat message input */
-.chat-form textarea {
-    width: 30vw;
-    height: 10vh;
-    resize: none;  /* Prevent resizing */
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 5px solid #ddd;
-}
-
-.chat-form input[type="text"] {
-    resize: none;  /* This isn't necessary for input[type="text"], but won't hurt */
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-}
-
-
-/* button */
-.chat-form button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    border: none;
-    background-color: #000000;
-    color: white;
-    cursor: pointer;
-}
-
-
-/* footer */
-footer {
-    background-color: #fff8dc;
-    font-weight: 600;
-    text-align: center;
-    padding: 12px;
-    position: relative;
-    width: 100%;
-    bottom: 0;
-}
-
-footer a {
-    color: #000000;
-    text-decoration: none;
-}
-
-footer a:hover {
-    color: #444444;
-}
-
-/* Files section */
-.files-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.files-upload {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.files-upload button {
-    padding: 10px 20px;
-    border: none;
-    background-color: #000000;
-    color: white;
-    cursor: pointer;
-}
-
-.files-upload button:hover {
-    background-color: #333333;
-}
-
-#upload-status {
-    margin-left: 10px;
-    font-style: italic;
-}
-
-.file-list {
-    list-style: none;
-    padding: 0;
-}
-
-.file-list li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px;
-    margin-bottom: 8px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-}
-
-.file-list .file-name {
-    flex: 1;
-    word-break: break-all;
-}
-
-.file-list .file-size {
-    color: #888;
-    font-size: 0.9em;
-}
-
-.file-list button {
-    padding: 5px 10px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    cursor: pointer;
-}
-
-.file-list button:hover {
-    background-color: #f0f0f0;
-}
-
-.no-files {
-    text-align: center;
-    color: #888;
-    font-style: italic;
+    .chat-messages,
+    .chat-form input[type="text"],
+    .textarea-wrapper {
+        width: 85%;
+        max-width: 100%;
+    }
 }

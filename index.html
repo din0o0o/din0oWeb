@@ -5,32 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>din0o0oWeb</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="resources/icon.png" type="image/x-icon">
+    <link rel="icon" href="icon.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;600&family=Noto+Sans+Mono:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1><a href="#home" onclick="showSection('home')">
-            <img id="headerlogo" src="/resources/header.png"></a></h1>
+        <h1><a href="#home"><img id="headerlogo" src="header.png" alt="din0o0o"></a></h1>
         <nav class="navbar">
             <ul>
-                <li><a href="#stuff" onclick="showSection('stuff')">Stuff</a></li>
-                <li>|</li>
-                <li><a href="#links" onclick="showSection('links')">Links</a></li>
-                <li>|</li>
-                <li><a href="#files" onclick="showSection('files')">Files</a></li>
-                <li>|</li>
-                <li><a href="#chat" onclick="showSection('chat')">Chat</a></li>
+                <li><a href="#stuff">Stuff</a></li>
+                <li class="nav-sep">|</li>
+                <li><a href="#links">Links</a></li>
+                <li class="nav-sep">|</li>
+                <li><a href="#files">Files</a></li>
+                <li class="nav-sep">|</li>
+                <li><a href="#chat">Chat</a></li>
             </ul>
         </nav>
+        <button id="darkmode-toggle" aria-label="Toggle dark mode">🌙</button>
+        <span id="nav-dot"></span>
     </header>
     <main id="main-content">
-        <section id="home">
-        </section>
+        <section id="home"></section>
     </main>
     <footer>
         <br>&copy; <a href="https://github.com/din0o0o" target="_blank">din0o0o</a>. 2024-26
     </footer>
-
     <script src="script.js"></script>
 </body>
 </html>
