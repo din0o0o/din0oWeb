@@ -8,12 +8,12 @@ din0oWeb/
 ├── index.html          # Shell: header, nav, footer
 ├── home.html           # Home section
 ├── stuff.html          # Projects & downloads
-├── links.html          # Curated links (Software, Games, Web, AI, Science)
+├── links.html          # Curated links
 ├── files.html          # File upload/download
 ├── chat.html           # Guestbook
 ├── script.js           # All frontend JS (navigation, chat, files)
 ├── styles.css          # All styles (CSS variables, dark mode, fonts)
-├── header.png          # Header logo
+├── dino_logo.svg       # Header decoration (dino peeking over border)
 ├── icon.png            # Favicon
 └── README.md           # This file
 ```

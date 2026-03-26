@@ -73,22 +73,53 @@ header {
     background-color: var(--header-bg);
     padding: 15px;
     text-align: center;
-    border-bottom: 4px double var(--header-border);
     position: relative;
+    overflow: visible;
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-bottom: 4px double var(--header-border);
+    z-index: 10;
+    pointer-events: none;
 }
 
 header h1 {
     margin: 0;
 }
 
-#headerlogo {
-    max-width: 100%;
-    height: auto;
-    scale: 0.8;
+header h1 a {
+    font-family: "Noto Sans Mono", "Courier New", monospace;
+    font-size: 2.4rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--header-border);
+    text-decoration: none;
 }
 
-h1 a {
-    text-decoration: none;
+header h1 a:hover {
+    opacity: 0.75;
+}
+
+/* Dino logo — absolute, base anchored at header bottom */
+#dino-logo {
+    position: absolute;
+    left: 15%;
+    bottom: -74px;
+    height: 180px;
+    width: auto;
+    clip-path: inset(0 0 43% 0);
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+[data-theme="dark"] #dino-logo {
+    filter: invert(1);
 }
 
 
@@ -97,15 +128,21 @@ h1 a {
     position: absolute;
     top: 10px;
     right: 12px;
-    background: none;
-    border: 1px solid transparent;
-    border-radius: 6px;
-    font-size: 1.3em;
-    cursor: pointer;
-    padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2em;
+    height: 2em;
+    padding: 0;
     line-height: 1;
+    background: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 1.3em;
     user-select: none;
     transition: border-color 0.15s;
+    box-sizing: border-box;
 }
 
 #darkmode-toggle:hover {
@@ -185,7 +222,6 @@ h3 {
     font-family: "Noto Sans Mono", "Courier New", monospace;
     color: var(--text-dark);
     font-weight: 300;
-    font-style: italic;
 }
 
 
@@ -208,10 +244,19 @@ footer a {
 
 /* ─── Action buttons (icon buttons with accent border on hover) ─── */
 button.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.8em;
+    height: 1.8em;
+    padding: 0;
+    line-height: 1;
+    background: none;
+    cursor: pointer;
     border: 1px solid transparent;
-    border-radius: 6px;
+    border-radius: 4px;
     transition: border-color 0.15s;
-    position: relative;
+    box-sizing: border-box;
 }
 
 button.action-btn:hover {
@@ -241,13 +286,23 @@ button.action-btn:hover {
 }
 
 .chat-messages li {
-    padding: 8px;
-    margin-bottom: 8px;
+    padding: 6px 8px;
+    margin-bottom: 4px;
     border-bottom: 1px solid var(--sep);
 }
 
 .chat-messages li:last-child {
     border-bottom: none;
+}
+
+.msg-meta {
+    font-size: 0.78em;
+    color: var(--muted);
+    margin-bottom: 2px;
+}
+
+.msg-text {
+    font-size: 0.92em;
 }
 
 .chat-form {
@@ -302,16 +357,7 @@ button.action-btn:hover {
     position: absolute;
     bottom: 4px;
     right: 4px;
-    width: 2.4em;
-    height: 2.4em;
     font-size: 1.3em;
-    background: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    line-height: 1;
 }
 
 .chat-status {
@@ -330,24 +376,19 @@ button.action-btn:hover {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-}
-
-.files-upload {
-    margin-bottom: 20px;
     text-align: center;
 }
 
-.files-upload button {
-    width: 2.8em;
-    height: 2.8em;
-    font-size: 1.4em;
-    background: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    line-height: 1;
+.files-main {
+    width: 60%;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+#upload-btn {
+    font-size: 1.3em;
+    margin-top: 4px;
 }
 
 .upload-progress {
@@ -380,9 +421,9 @@ button.action-btn:hover {
 .file-list li {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    margin-bottom: 6px;
+    gap: 6px;
+    padding: 7px 10px;
+    margin-bottom: 4px;
     background-color: var(--item-bg);
     border: 1px solid var(--item-border);
 }
@@ -395,20 +436,16 @@ button.action-btn:hover {
 
 .file-list .file-size {
     color: var(--muted);
-    font-size: 0.9em;
+    font-size: 0.85em;
+}
+
+.file-list .file-date {
+    color: var(--muted);
+    font-size: 0.82em;
 }
 
 .file-list button {
-    width: 2em;
-    height: 2em;
     font-size: 1.1em;
-    background: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    line-height: 1;
 }
 
 .no-files {
@@ -424,10 +461,12 @@ button.action-btn:hover {
         display: none;
     }
 
-    #headerlogo {
-        max-width: 90%;
-        height: auto;
-        scale: 0.7;
+    #dino-logo {
+        display: none;
+    }
+
+    header h1 a {
+        font-size: 1.7rem;
     }
 
     header {
@@ -451,7 +490,8 @@ button.action-btn:hover {
 
     .chat-messages,
     .chat-form input[type="text"],
-    .textarea-wrapper {
+    .textarea-wrapper,
+    .files-main {
         width: 85%;
         max-width: 100%;
     }

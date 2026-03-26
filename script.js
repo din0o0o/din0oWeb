@@ -189,8 +189,8 @@ function renderMessages(list, messages) {
     messages.forEach(msg => {
         const li = document.createElement('li');
         const time = formatTime(msg.timestamp);
-        const name = msg.name ? `<em>${escapeHtml(msg.name)}</em> ` : '';
-        li.innerHTML = `<strong>${time} &gt;</strong> ${name}${escapeHtml(msg.text)}`;
+        const name = msg.name ? escapeHtml(msg.name) : 'anon';
+        li.innerHTML = `<div class="msg-meta">${name} · ${time}</div><div class="msg-text">${escapeHtml(msg.text)}</div>`;
         list.appendChild(li);
     });
     if (atBottom) list.scrollTop = list.scrollHeight;
@@ -205,6 +205,10 @@ function showChatStatus(msg) {
 
 function formatTime(timestamp) {
     return new Date(timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
+function formatDate(timestamp) {
+    return new Date(timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
 }
 
 function escapeHtml(text) {
@@ -274,11 +278,13 @@ function renderFiles(list, files) {
     }
     files.forEach(file => {
         const li = document.createElement('li');
+        const date = file.uploaded_at ? `<span class="file-date">${formatDate(file.uploaded_at)}</span>` : '';
         li.innerHTML = `
             <span class="file-name">${escapeHtml(file.original_name)}</span>
+            ${date}
             <span class="file-size">${formatFileSize(file.size)}</span>
-            <button class="action-btn" onclick="downloadFile('${file.filename}')">⤵️</button>
-            <button class="action-btn" onclick="deleteFile('${file.filename}')">❌</button>
+            <button class="action-btn" onclick="downloadFile('${escapeHtml(file.filename)}')">⤵️</button>
+            <button class="action-btn" onclick="deleteFile('${escapeHtml(file.filename)}')">❌</button>
         `;
         list.appendChild(li);
     });

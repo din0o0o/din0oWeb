@@ -1,8 +1,9 @@
 <div class="files-container">
-    <div class="files-upload">
-        <input type="file" id="file-input" multiple hidden>
-        <button class="action-btn" onclick="document.getElementById('file-input').click()">⤴️</button>
+    <h3>Upload and download files</h3>
+    <input type="file" id="file-input" multiple hidden>
+    <div class="files-main">
+        <div id="upload-progress" class="upload-progress" style="display:none"></div>
+        <ul id="file-list" class="file-list"></ul>
+        <button class="action-btn" id="upload-btn" onclick="document.getElementById('file-input').click()">➕</button>
     </div>
-    <div id="upload-progress" class="upload-progress" style="display:none"></div>
-    <ul id="file-list" class="file-list"></ul>
 </div>
