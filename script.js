@@ -8,6 +8,8 @@ const CHAT_COOLDOWN = 5000;
 let filesInitialized = false;
 let messagesCache = null;
 let filesCache = null;
+let stuffCache = null;
+let linksCache = null;
 
 
 // ─── Dark Mode ───────────────────────────────────────────────────────
@@ -47,7 +49,6 @@ function updateNavIndicator(section) {
 
 // ─── Navigation ──────────────────────────────────────────────────────
 function showSection(section) {
-    // Clean up previous section state
     if (section !== 'chat' && chatPollInterval) {
         clearInterval(chatPollInterval);
         chatPollInterval = null;
@@ -64,6 +65,8 @@ function showSection(section) {
             document.getElementById('main-content').innerHTML = html;
             if (section === 'chat') initializeChat();
             else if (section === 'files') initializeFiles();
+            else if (section === 'stuff') loadStuff();
+            else if (section === 'links') loadLinks();
         })
         .catch(err => console.error('Error loading section:', err));
 }
@@ -93,18 +96,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.addEventListener('resize', () => updateNavIndicator(currentSection));
 
-    // Background prefetch for snappier section loads
     prefetch();
 });
 
 async function prefetch() {
     try {
-        const [msgRes, fileRes] = await Promise.all([
+        const [msgRes, fileRes, stuffRes, linksRes] = await Promise.all([
             fetch('/api/messages'),
-            fetch('/api/files')
+            fetch('/api/files'),
+            fetch('/api/stuff'),
+            fetch('/api/links')
         ]);
         if (msgRes.ok) messagesCache = await msgRes.json();
         if (fileRes.ok) filesCache = await fileRes.json();
+        if (stuffRes.ok) stuffCache = await stuffRes.json();
+        if (linksRes.ok) linksCache = await linksRes.json();
     } catch (_) { /* non-critical */ }
 }
 
@@ -117,7 +123,6 @@ function initializeChat() {
     if (chatInitialized) return;
     chatInitialized = true;
 
-    // Restore saved name
     const nameInput = document.getElementById('chat-name');
     if (nameInput) {
         nameInput.value = localStorage.getItem('chatName') || '';
@@ -170,7 +175,6 @@ async function loadMessages() {
         return;
     }
 
-    // Show cache instantly while fetching fresh data
     if (messagesCache) renderMessages(messagesList, messagesCache);
 
     try {
@@ -203,12 +207,18 @@ function showChatStatus(msg) {
     setTimeout(() => { if (el.textContent === msg) el.textContent = ''; }, 3000);
 }
 
+function parseTimestamp(ts) {
+    // SQLite CURRENT_TIMESTAMP uses space separator ("2026-03-30 14:23:45"), not ISO 8601.
+    // Replace space with T and append Z (UTC) so all browsers parse it correctly.
+    return new Date(ts.includes('T') ? ts : ts.replace(' ', 'T') + 'Z');
+}
+
 function formatTime(timestamp) {
-    return new Date(timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    return parseTimestamp(timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 }
 
 function formatDate(timestamp) {
-    return new Date(timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
+    return parseTimestamp(timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
 }
 
 function escapeHtml(text) {
@@ -218,36 +228,82 @@ function escapeHtml(text) {
 }
 
 
-// ─── Files ────────────────────────────────────────────────────────────
-function getUploadPassword() {
-    let pwd = localStorage.getItem('uploadPassword');
-    if (pwd === null) {
-        const input = prompt('Upload password (leave blank if none):');
-        if (input === null) return null; // cancelled
-        pwd = input.trim();
-        localStorage.setItem('uploadPassword', pwd);
+// ─── Stuff ────────────────────────────────────────────────────────────
+async function loadStuff() {
+    const stuffList = document.getElementById('stuff-list');
+    if (!stuffList) return;
+
+    if (stuffCache) renderStuff(stuffList, stuffCache);
+
+    try {
+        const res = await fetch('/api/stuff');
+        const items = await res.json();
+        stuffCache = items;
+        renderStuff(stuffList, items);
+    } catch (err) {
+        console.error('Error loading stuff:', err);
     }
-    return pwd;
 }
 
-function initializeFiles() {
-    const fileInput = document.getElementById('file-input');
-    if (!fileInput || filesInitialized) return;
-    filesInitialized = true;
-
-    loadFiles();
-
-    fileInput.addEventListener('change', async (e) => {
-        const pwd = getUploadPassword();
-        if (pwd === null) return; // user cancelled prompt
-
-        for (const file of e.target.files) {
-            const ok = await uploadFile(file, pwd);
-            if (!ok) break;
-        }
-        fileInput.value = '';
-        loadFiles();
+function renderStuff(list, items) {
+    list.innerHTML = '';
+    if (!items.length) {
+        list.innerHTML = '<li>No projects yet</li>';
+        return;
+    }
+    items.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'stuff-card';
+        const thumb = item.thumbnail
+            ? `<a href="${escapeHtml(item.url || '#')}" target="_blank"><img class="stuff-thumb" src="/api/stuff/thumbnail/${escapeHtml(item.thumbnail)}" alt="${escapeHtml(item.title)}"></a>`
+            : '';
+        li.innerHTML = thumb
+            + `<div class="stuff-info">`
+            + `<a href="${escapeHtml(item.url || '#')}" target="_blank">${escapeHtml(item.title)}</a>`
+            + `<span>${escapeHtml(item.description)}</span>`
+            + `</div>`;
+        list.appendChild(li);
     });
+}
+
+
+// ─── Links ────────────────────────────────────────────────────────────
+async function loadLinks() {
+    const linksList = document.getElementById('links-list');
+    if (!linksList) return;
+
+    if (linksCache) renderLinks(linksList, linksCache);
+
+    try {
+        const res = await fetch('/api/links');
+        const items = await res.json();
+        linksCache = items;
+        renderLinks(linksList, items);
+    } catch (err) {
+        console.error('Error loading links:', err);
+    }
+}
+
+function renderLinks(list, items) {
+    list.innerHTML = '';
+    if (!items.length) {
+        list.innerHTML = '<span>No links yet</span>';
+        return;
+    }
+    items.forEach(item => {
+        const line = document.createElement('div');
+        line.innerHTML = `<a href="${escapeHtml(item.url)}" target="_blank">${escapeHtml(item.name)}</a>`
+            + `<br><span>${escapeHtml(item.description)}</span>`;
+        list.appendChild(line);
+    });
+}
+
+
+// ─── Files ────────────────────────────────────────────────────────────
+function initializeFiles() {
+    if (filesInitialized) return;
+    filesInitialized = true;
+    loadFiles();
 }
 
 async function loadFiles() {
@@ -257,7 +313,6 @@ async function loadFiles() {
         return;
     }
 
-    // Show cache instantly while fetching fresh data
     if (filesCache) renderFiles(fileList, filesCache);
 
     try {
@@ -278,76 +333,19 @@ function renderFiles(list, files) {
     }
     files.forEach(file => {
         const li = document.createElement('li');
-        const date = file.uploaded_at ? `<span class="file-date">${formatDate(file.uploaded_at)}</span>` : '';
+        const date = file.uploaded ? `<span class="file-date">${formatDate(file.uploaded)}</span>` : '';
         li.innerHTML = `
             <span class="file-name">${escapeHtml(file.original_name)}</span>
             ${date}
             <span class="file-size">${formatFileSize(file.size)}</span>
             <button class="action-btn" onclick="downloadFile('${escapeHtml(file.filename)}')">⤵️</button>
-            <button class="action-btn" onclick="deleteFile('${escapeHtml(file.filename)}')">❌</button>
         `;
         list.appendChild(li);
     });
 }
 
-function uploadFile(file, password) {
-    return new Promise((resolve) => {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const xhr = new XMLHttpRequest();
-
-        xhr.upload.addEventListener('progress', (e) => {
-            if (e.lengthComputable) {
-                updateProgress(file.name, Math.round((e.loaded / e.total) * 100));
-            }
-        });
-
-        xhr.addEventListener('load', () => {
-            if (xhr.status === 401 || xhr.status === 403) {
-                localStorage.removeItem('uploadPassword');
-                alert('Upload denied: incorrect password.');
-                resolve(false);
-            } else {
-                updateProgress(file.name, 100);
-                resolve(xhr.status >= 200 && xhr.status < 300);
-            }
-        });
-
-        xhr.addEventListener('error', () => resolve(false));
-
-        xhr.open('POST', '/api/files');
-        xhr.setRequestHeader('X-Upload-Password', password || '');
-        xhr.send(formData);
-    });
-}
-
-function updateProgress(filename, pct) {
-    const container = document.getElementById('upload-progress');
-    if (!container) return;
-    container.style.display = 'block';
-    container.innerHTML = `
-        <div>${escapeHtml(filename)} — ${pct}%</div>
-        <div class="upload-progress-bar-bg">
-            <div class="upload-progress-bar" style="width:${pct}%"></div>
-        </div>`;
-    if (pct >= 100) {
-        setTimeout(() => { container.style.display = 'none'; }, 1200);
-    }
-}
-
 function downloadFile(filename) {
     window.location.href = `/api/files/${encodeURIComponent(filename)}`;
-}
-
-async function deleteFile(filename) {
-    if (!confirm('Delete this file?')) return;
-    try {
-        const res = await fetch(`/api/files/${encodeURIComponent(filename)}`, { method: 'DELETE' });
-        if (res.ok) loadFiles();
-    } catch (err) {
-        console.error('Delete error:', err);
-    }
 }
 
 function formatFileSize(bytes) {

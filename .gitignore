@@ -6,6 +6,7 @@
 # OS files
 desktop.ini
 .DS_Store
+Thumbs.db
 
 # Build scripts
 *.bat
@@ -16,3 +17,7 @@ CLAUDE.md
 TODO.txt
 example.png
 section_titles.txt
+nginx.conf
+
+# Screenshots / temp
+*.jpeg

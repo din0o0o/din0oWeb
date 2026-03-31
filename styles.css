@@ -413,6 +413,40 @@ button.action-btn:hover {
     border-radius: 2px;
 }
 
+.stuff-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.stuff-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--sep);
+}
+
+.stuff-thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border: 1px solid var(--item-border);
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.stuff-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stuff-info span {
+    font-size: 0.9em;
+    color: var(--text);
+}
+
 .file-list {
     list-style: none;
     padding: 0;
